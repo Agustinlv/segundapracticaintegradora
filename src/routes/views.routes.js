@@ -1,5 +1,6 @@
 //Module imports
 import { Router } from "express";
+import passport from "passport";
 
 const router = Router();
 
@@ -13,19 +14,12 @@ const cartManager = new CartManager();
 
 const publicAccess = (req, res, next) => {
     
-    if (req.session.user) return res.redirect('/products');
+    if (req.user) return res.redirect('/products');
 
     next();
 };
 
-const privateAccess = (req, res, next) => {
-
-    if (!req.session.user) return res.redirect('/login');
-
-    next();
-}
-
-router.get('/', privateAccess, async (req, res) => {
+router.get('/', passport.authenticate('current', {session: false, failureRedirect: '/login'}), async (req, res) => {
 
     res.redirect('/products')
 
@@ -33,19 +27,19 @@ router.get('/', privateAccess, async (req, res) => {
 
 router.get('/login', publicAccess, async(req, res) => {
     
-    res.render('login', {});
+    res.render('login');
 
 });
 
 router.get('/register', publicAccess, async (req, res) => {
     
-    res.render('register', {})
+    res.render('register')
 
 });
 
-router.get('/profile', privateAccess, async (req, res) => {
+router.get('/profile', passport.authenticate('current', {session: false, failureRedirect: '/login'}), async (req, res) => {
     
-    res.render('profile', {user: req.session.user})
+    res.render('profile', {user: req.user.user})
 
 });
 
@@ -62,7 +56,7 @@ router.get('/carts/:cid', async(req, res) => {
     
 });
 
-router.get('/products', privateAccess, async (req, res)=>{
+router.get('/products', passport.authenticate('current', {session: false}), async (req, res)=>{
 
     const {limit = 10, page = 1, category, available, sort} = req.query;
     
@@ -79,7 +73,7 @@ router.get('/products', privateAccess, async (req, res)=>{
         hasPrevPage: respuesta.message.hasPrevPage,
         prevLink: respuesta.message.prevLink,
         nextLink: respuesta.message.nextLink,
-        user: req.session.user
+        user: req.user.user
     });
 
 });

@@ -1,5 +1,6 @@
 import cartModel from '../models/cart.model.js';
 import productModel from '../models/product.model.js';
+import userModel from '../models/user.models.js';
 
 export default class CartManager{
 
@@ -7,19 +8,18 @@ export default class CartManager{
         
         try {
             
-            let cart = await cartModel.findOne({owner: uid, status: true});
+            //Busco un cart activo para el usuario que se acaba de loguear
+            let _cart = await cartModel.findOne({owner: uid, status: true});
 
-            if (!cart) {
+            
+            //Si no tiene ningún cart activo, creo uno y se lo asigno al usuario
+            if (!_cart) {
                 
-                await cartModel.create({owner: uid}).then(result => cart = result);
-
+                await cartModel.create({owner: uid}).then(result => _cart = result);
+                
             };
 
-            return {
-                code: 202,
-                status: 'Success',
-                message: cart
-            };
+            await userModel.updateOne({_id: uid}, {cart: _cart._id});
 
         } catch (error) {
 

@@ -17,15 +17,15 @@ form.addEventListener('submit', async (event) => {
             'Content-Type': 'application/json'
         }
     })
-    .then( res => {
+    .then( res => res.json()).then( json => {
 
-        if (res.status === 200) {
-        
+        if (json.status === 'Success') {
+
             window.location.replace('/products');
         
         } else {
 
-            alert('Incorrect credentials');
+            alert(json.message);
 
             form[0].value = '';
 

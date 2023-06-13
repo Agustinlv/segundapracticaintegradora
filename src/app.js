@@ -2,16 +2,18 @@
 import express from 'express';
 import handlebars from 'express-handlebars';
 import mongoose from 'mongoose';
-import MongoStore from 'connect-mongo';
 import cookieParser from 'cookie-parser';
-import session from 'express-session';
 
 //File imports
 import __dirname from './utils.js';
-import productRouter from './routes/products.router.js';
-import cartRouter from './routes/carts.router.js';
-import sessionRouter from './routes/sessions.router.js'
-import viewRouter from './routes/views.router.js';
+import initializePassport from './config/passport.config.js';
+import productRouter from './routes/products.routes.js';
+import cartRouter from './routes/carts.routes.js';
+import sessionRouter from './routes/sessions.routes.js'
+import viewRouter from './routes/views.routes.js';
+import passport from 'passport';
+
+initializePassport();
 
 const PORT = process.env.PORT || 8080;
 
@@ -33,17 +35,8 @@ app.use(express.urlencoded({extended: true}));
 
 app.use(express.static(__dirname + '/public'));
 
-//Connect Mongo
-app.use(session({
-    store: new MongoStore({
-        mongoUrl: MONGO,
-        ttl: 3600
-    }),
-    secret: "SecretKey",
-    resave: false,
-    saveUninitialized: false
-    })
-);
+//Passport
+app.use(passport.initialize());
 
 //Handlebars
 app.engine('handlebars', handlebars.engine());

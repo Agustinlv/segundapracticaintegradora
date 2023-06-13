@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import paginate from "mongoose-paginate-v2";
+import mongoose from 'mongoose';
+import paginate from 'mongoose-paginate-v2';
 
 const productModel = mongoose.model(
     'products',

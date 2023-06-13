@@ -25,11 +25,11 @@ form.addEventListener('submit', event => {
 
         } else {
 
-            alert(`Another user with that email already exists. If it's you, please login instead of registering.`);
+            alert(`Existing user. Please login instead of registering.`);
 
             for (let i = 0; i < form.length - 1; i++) {
 
-                form[i].value = '';
+                form[i].value = ''; 
 
             };
 

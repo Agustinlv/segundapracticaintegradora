@@ -2,7 +2,7 @@
     <div class="main-container">
         <h1>Puzzle Catalog</h1>
         <div class="controls">
-            <p>You are logged as {{user.name}} ({{user.role}})</p>
+            <p>You are logged as {{user.first_name}} {{user.last_name}} ({{user.role}})</p>
             <a href="/profile"><button>Profile</button></a>
             <a href="/api/sessions/logout"><button >Logout</button></a>
             <div id="cart-id">{{user.cart}}</div>
